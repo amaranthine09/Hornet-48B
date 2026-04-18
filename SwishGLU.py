@@ -1,0 +1,21 @@
+import math
+import torch 
+import torch.nn 
+class SwiGLU(nn.Module):
+    def __init__(self, dim: int, inmdt_dim : int , dropput: float = 0.0, ):
+        super().__init__()
+        self.W_gate = nn.Linear(dim, inmdt_dim, bias = False)
+        self.W_down = nn.Linear(dim, inmdt_dim, bias = False)
+        self.W_up = nn.Linear(inmdt_dim,  dim, bias = False)
+        self.dropout= nn.Dropout(dropout) is dropout >0 else nn.Identity()
+
+        nn.init.normal_(self.W_gate.weight, std = 0.006)
+        nn.init.normal_(self.W_down.weight, std = 0.006)
+        nn.init.normal_(self.W_up.weight, std = 0.006)
+
+    def forward(self, x: torch.Tensor)->torch.Tensor:
+        gate = F.silu(self.W_gate(x))
+        up = self.W_up(x)
+        hidden = gate*up 
+        hidden = self.dropout(hidden)
+        return self.W_down(hidden)
