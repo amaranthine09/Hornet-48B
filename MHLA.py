@@ -1,8 +1,9 @@
 import math
 import torch 
 import torch.nn as nn 
-import torch.nn.fucntional as F 
+import torch.nn.functional as F 
 from RoPE import RoPE
+from typing import Optional 
 class MultiHeadLatentAttention(nn.Module):
     def __init__(
         self,
@@ -13,7 +14,7 @@ class MultiHeadLatentAttention(nn.Module):
         d_head: int,
         d_rope: int, 
         max_seq_len: int=4096,
-        feq_theta: int=10000.0
+        rope_theta: int=10000.0
         ):
 
         super().__init__()
@@ -78,7 +79,7 @@ class MultiHeadLatentAttention(nn.Module):
         attn_prob = F.softmax(attn_waight, dim= -1, dtype=torch.float32).to(Q.dtype)
 
         out = torch.matmul(attn_prob, V)
-        out = out.transpose(1, 2).contiguous().view(b_Size, seq_len, self.n_head*d_head)
+        out = out.transpose(1, 2).contiguous().view(b_size, seq_len, self.n_head*self.d_head)
         out = self.out_proj(out)
 
         return out

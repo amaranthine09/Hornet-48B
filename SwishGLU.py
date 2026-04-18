@@ -1,13 +1,14 @@
 import math
 import torch 
-import torch.nn 
+import torch.nn as nn
+import torch.nn.functional as F 
 class SwiGLU(nn.Module):
-    def __init__(self, dim: int, inmdt_dim : int , dropput: float = 0.0, ):
+    def __init__(self, dim: int, inmdt_dim : int , dropout: float = 0.0, ):
         super().__init__()
         self.W_gate = nn.Linear(dim, inmdt_dim, bias = False)
         self.W_down = nn.Linear(dim, inmdt_dim, bias = False)
         self.W_up = nn.Linear(inmdt_dim,  dim, bias = False)
-        self.dropout= nn.Dropout(dropout) is dropout >0 else nn.Identity()
+        self.dropout= nn.Dropout(dropout) if dropout >0 else nn.Identity()
 
         nn.init.normal_(self.W_gate.weight, std = 0.006)
         nn.init.normal_(self.W_down.weight, std = 0.006)

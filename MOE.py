@@ -1,6 +1,6 @@
 import math 
 import torch
-import torch.nn 
+import torch.nn as nn
 import torch.nn.functional as F 
 from typing import Optional, Tuple,  Dict
 from dataclasses import dataclass
@@ -22,7 +22,7 @@ class MOEconfg:
     max_deice_limit: int = 3
 
     no_of_device: int = 1
-    experts_per_device: optional[int] = None
+    experts_per_device: Optional[int] = None
 
     dropout: float = 0.0
     
@@ -41,6 +41,9 @@ class RMSNorm(nn.module):
 
 class Expert(nn.Module):
     def __init__(self, config: MOEconfg):
+        super().__init__()
+        self.FNN = SwiGlU(config.d_model, config.d_expert)
+        
 
 
 
